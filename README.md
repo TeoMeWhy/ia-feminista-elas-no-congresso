@@ -1,6 +1,6 @@
 # QuitérIA - A IA Feminista do Elas no Congresso
 
-> **Análise feminista do Legislativo: um LLM open-source para classificar projetos de lei sobre gênero e direitos das mulheres.**
+> **Análise feminista do Legislativo: uma IA open-source para classificar projetos de lei sobre gênero e direitos das mulheres.**
 
 ---
 
