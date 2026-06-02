@@ -4,7 +4,7 @@ import sys
 import dotenv
 dotenv.load_dotenv()
 
-DATA_PATH = os.getenv("DATA_PATH")
+DATA_PATH = os.getenv("DATA_PATH", "")
 
 import pandas as pd
 from sklearn import model_selection
