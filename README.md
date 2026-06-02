@@ -163,32 +163,22 @@ Este modelo classifica PLs como:
 - **Classe 0 (Favorável)**: Promovem direitos das mulheres, igualdade de gênero, garantias legais.
 - **Classe 1 (Desfavorável)**: Representam retrocessos, ameaçam políticas públicas ou ampliam desigualdades.
 
-Após ajuste de limiar, o modelo obteve:
-- F1-score de 0.88 para Classe 0
-- F1-score de 0.64 para Classe 1
+O modelo campeão atual possui:
+- F1-score de **0.9372** para Classe 0
+- F1-score de **0.7536** para Classe 1
 
 
 ### Avaliação
 
-O modelo atingiu as seguintes métricas no [dataset de avaliação](https://huggingface.co/datasets/azmina/ementas_anotadas_inteiroteor):
+O modelo atingiu as seguintes métricas no dataset de `teste`:
 
-|               | Precision | Recall | F1-Score | Support |
-|---------------|-----------|--------|----------|---------|
-| Class 0       | 0.94      | 0.53   | 0.67     | 114     |
-| Class 1       | 0.35      | 0.88   | 0.50     | 33      |
-| Accuracy      |           |        | 0.61     | 147     |
-| Macro Avg     | 0.64      | 0.70   | 0.59     | 147     |
-| Weighted Avg  | 0.81      | 0.61   | 0.64     | 147     |
+|                | Precision | Recall | F1-Score | Support |
+|----------------|-----------|--------|----------|---------|
+| Class 0        | 0.9202    | 0.9548 | 0.9372   | 133     |
+| Class 1        | 0.8125    | 0.7027 | 0.7536   | 37      |
+| Accuracy       |           |        | 0.9000   | 170     |
+| AUC Score      |           |        | 0.9022   | 170     |
 
-Para uma performance mais equilibrada entre as classes, é possível ajustar o limiar da classificação binária, a partir da análise da curva ROC (disponível no [notebook de avaliação](modelos_avaliacao/avaliacao.ipynb)), chegando aos seguintes resultados:
-
-|               | Precision | Recall | F1-Score | Support |
-|---------------|-----------|--------|----------|---------|
-| Class 0       | 0.91      | 0.86   | 0.88     | 114     |
-| Class 1       | 0.59      | 0.70   | 0.64     | 33      |
-| Accuracy      |           |        | 0.82     | 147     |
-| Macro Avg     | 0.75      | 0.78   | 0.76     | 147     |
-| Weighted Avg  | 0.84      | 0.82   | 0.83     | 147     |
 
 ## 🎖️ Conheça Maria Quitéria, nossa homenageada
 Em 1823, Maria Quitéria se vestiu de homem para lutar pela independência do Brasil, uma coragem que desafiou as expectativas de seu tempo. Dois séculos depois, QuitérIA nasce com o mesmo espírito revolucionário, ocupando os espaços digitais de poder para garantir que as leis brasileiras considerem leis sempre o recorte de gênero. 
@@ -208,10 +198,20 @@ Os trabalhos listados propõem diferentes categorizações em documentos do âmb
 | [Classificação de documentos jurídicos utilizando a arquitetura Transformer: uma análise comparativa com algoritmos tradicionais de Machine Learning e ChatGPT](https://ojs.brazilianjournals.com.br/ojs/index.php/BRJD/article/view/60747) | 62%      | 62%      | 62%    |
 
 ## 🛠 Versões
-- Transformers 4.45.1
-- Pytorch 2.4.1+cu121
-- Datasets 3.0.1
-- Tokenizers 0.20.0
+
+- datasets==4.8.5
+- evaluate==0.4.6
+- ipython==9.14.0
+- mlflow==3.12.0
+- mlflow_skinny==3.12.0
+- mlflow_tracing==3.12.0
+- numpy==2.4.6
+- python-dotenv==1.2.2
+- scikit_learn==1.9.0
+- seaborn==0.13.2
+- torch==2.12.0
+- torchvision==0.27.0
+- transformers[torch]==5.7.0
 
 ## 📄 Licença e Contribuições
 
