@@ -123,6 +123,6 @@ df_train = pd.DataFrame({"textFormat": X_train["textFormat"], "tema": X_train["t
 df_val = pd.DataFrame({"textFormat": X_val["textFormat"], "tema": X_val["tema"], "fl_desfavoravel": y_val})
 df_test = pd.DataFrame({"textFormat": X_test["textFormat"], "tema": X_test["tema"], "fl_desfavoravel": y_test})
 
-df_train.to_parquet("train.parquet", index=False)
-df_val.to_parquet("validation.parquet", index=False)
-df_test.to_parquet("test.parquet", index=False)
+df_train.to_parquet("../dados/train.parquet", index=False)
+df_val.to_parquet("../dados/validation.parquet", index=False)
+df_test.to_parquet("../dados/test.parquet", index=False)
