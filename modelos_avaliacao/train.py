@@ -5,6 +5,7 @@ import dotenv
 dotenv.load_dotenv()
 
 MLFLOW_URI = os.getenv("MLFLOW_URI", "http://localhost:5000")
+EXPERIMENT_DESFAVORAVEL_NAME = os.getenv("EXPERIMENT_DESFAVORAVEL_NAME", "azmina_quiteria_desfavoravel")
 
 from transformers import (
     AutoModel,
@@ -31,7 +32,7 @@ import torch.nn.functional as F
 
 import mlflow
 mlflow.set_tracking_uri(MLFLOW_URI)
-mlflow.set_experiment(experiment_name="azmina_quiteria_desfavoravel")
+mlflow.set_experiment(experiment_name=EXPERIMENT_DESFAVORAVEL_NAME)
 
 # %%
 
@@ -105,9 +106,11 @@ def compute_metrics(eval_pred):
 
 # %%
 
-runs = 1
+runs = 100
 
 for i in range(runs):
+    
+    mlflow.start_run(run_name=f"run_{i+1}")
 
     training_args = TrainingArguments(
         output_dir="./results",
