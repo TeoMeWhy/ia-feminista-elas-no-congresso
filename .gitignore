@@ -1,4 +1,10 @@
 *.env
+
+*.db
 *.parquet
 *.csv
+
+__pycache__
+
 results
+mlartifacts
