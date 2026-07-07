@@ -3,6 +3,11 @@
 > **Análise feminista do Legislativo: uma IA open-source para classificar projetos de lei sobre gênero e direitos das mulheres.**
 
 PARTICIPANTE: GIULIA LOBO
+
+## fluxo de trabalho Git local
+1. git checkout -b <nova branch> 
+2. cria ou atualiza arquivos 
+3. git status
 ---
 
 ## 📌 Sumário
