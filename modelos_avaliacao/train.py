@@ -36,9 +36,11 @@ mlflow.set_experiment(experiment_name=EXPERIMENT_DESFAVORAVEL_NAME)
 
 # %%
 
-df_train = pd.read_parquet("../dados/train.parquet")
-df_val = pd.read_parquet("../dados/validation.parquet")
-df_test = pd.read_parquet("../dados/test.parquet")
+df_train = pd.read_parquet("../dados/train_2026_07_15.parquet")
+df_val = pd.read_parquet("../dados/validation_2026_07_15.parquet")
+df_test = pd.read_parquet("../dados/test_2026_07_15.parquet")
+
+df_test.head()
 
 # %%
 
@@ -68,7 +70,6 @@ dataset = DatasetDict({
 
 model_name = "neuralmind/bert-base-portuguese-cased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2)
 
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
@@ -84,7 +85,7 @@ def preprocess(examples):
     return tokens
 
 tokenized_datasets = dataset.map(preprocess, batched=True)
-tokenized_datasets = tokenized_datasets.remove_columns(["textFormat", "fl_desfavoravel"])
+tokenized_datasets = tokenized_datasets.remove_columns(["tema", "textFormat", "fl_desfavoravel"])
 tokenized_datasets
 
 # %%
@@ -97,6 +98,7 @@ recall = evaluate.load("recall")
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
     preds = np.argmax(logits, axis=-1)
+    
     return {
         "accuracy": accuracy.compute(predictions=preds, references=labels)["accuracy"],
         "f1": f1.compute(predictions=preds, references=labels)["f1"],
@@ -111,18 +113,27 @@ runs = 100
 for i in range(runs):
     
     mlflow.start_run(run_name=f"run_{i+1}")
+    
+    model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2)
 
     training_args = TrainingArguments(
-        output_dir="./results",
+        output_dir=f"./results/_run_{i+1}",
         learning_rate=2e-5,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
-        num_train_epochs=3,              # Aumentamos aqui...
+        num_train_epochs=10,              # Aumentamos aqui...
         weight_decay=0.01,
+
+        gradient_accumulation_steps=2,
+        warmup_ratio=0.1,
+
+
         eval_strategy="steps",           # Avalia a cada X passos, não só no fim da época
         eval_steps=100,
         save_strategy="steps",
         save_steps=100,
+        save_total_limit=1,                 # Mantém apenas o melhor checkpoint local
+
         load_best_model_at_end=True,    # Garante que o modelo final é o melhor 'checkpoint'
         metric_for_best_model="f1",
         greater_is_better=True,
@@ -185,3 +196,8 @@ for i in range(runs):
     mlflow.transformers.log_model(model_final, "model")
     mlflow.end_run()
 
+
+# %%
+
+mlflow.end_run()
+# %%

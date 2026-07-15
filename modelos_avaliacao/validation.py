@@ -36,7 +36,7 @@ model_run_stats
 # %%
 
 
-df_runs = mlflow.search_runs(experiment_names=[f"azmina_{model_name}"], filter_string="attributes.status = 'FINISHED'")
+df_runs = mlflow.search_runs(experiment_names=["azmina_quiteria_desfavoravel_2026_07_15"], filter_string="attributes.status = 'FINISHED'")
 df_runs =df_runs.dropna(subset=['metrics.accuracy'])
 df_runs
 
@@ -115,3 +115,5 @@ plt.show()
 
 # %%
 print(stats)
+
+# %%

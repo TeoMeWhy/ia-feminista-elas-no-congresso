@@ -33,13 +33,13 @@ def format_markdown(text_md):
             continue
         
         lines.append(text)
-    text = "\n\n".join(lines)
+    text = " ".join(lines)
     return text
 
 
 def format_text(row):
     text_template = """Partido: {partido}; Genero: {genero}; UF: {uf}; Conteúdo: {texto}"""
-    text = text_template.format(partido=row["partido"], genero=row["genero"], uf=row["uf"], texto=row["textInteiroTeorFormatFill"])
+    text = text_template.format(partido=row["partido"], genero=row["genero"], uf=row["uf"], texto=row["textoInteiroTeorFormatFill"])
     return text
 
 
@@ -55,31 +55,40 @@ else:
     print("Formato de arquivo não suportado. Use xlsx ou csv")
     sys.exit(1)
 
+df.shape
+df[df['author_index']==1].groupby("id")["author_index"].count().sort_values(ascending=False).head(10)
+
 
 # %%
 
 columns = {
-    'casa':'casa',
+    'house':'casa',
     'id':'id',
     'uri':'uri',
-    'codTipo':'codTipo',
-    'Nome':'nome',
-    'ano':'ano',
-    'Ementa':'ementa',
-    'urlInteiroTeor':'urlInteiroTeor',
-    'textoInteiroTeor': 'textoInteiroTeor',
-    'partido':'partido',
-    'UF':'uf',
-    'gênero':'genero',
-    'Avaliação':'avaliacao',
-    'Relevância':'relevancia',
-    'Tema (class humana)':'tema',
+    'type_code':'codTipo',
+    'name':'nome',
+    'year':'ano',
+    'summary':'ementa',
+    'full_text': 'textoInteiroTeor',
+    "author": "author",
+    "author_index": "author_index",
+    'party':'partido',
+    'state':'uf',
+    'gender':'genero',
+    'assessment':'avaliacao',
+    'relevance':'relevancia',
+    'theme':'tema',
+    'is_favorable':'is_favorable',
 }
 
-df = (df[list(columns.keys())].rename(columns=columns)
-                              .drop_duplicates(subset=["nome"], keep="first")
-                              .dropna(subset=["nome"])
-                              .reset_index(drop=True))
+df = df[list(columns.keys())].rename(columns=columns)
+df = df[~df["textoInteiroTeor"].isna()]
+df = df[df['author_index']==1]
+df = (df.dropna(subset=["id"])
+        .sort_values(by=["id", "author_index"])
+        .drop_duplicates(subset=["id"], keep="first")
+        .reset_index(drop=True))
+
 
 # %%
 df_abt = df.copy()
@@ -90,6 +99,9 @@ df_abt["genero"] = df_abt["genero"].apply(lambda x: x.upper() if pd.notna(x) els
 df_abt["partido"] = df_abt["partido"].fillna("")
 df_abt["fl_desfavoravel"] = (df_abt["avaliacao"] == 'Desfavorável').astype(int)
 df_abt["textFormat"] = df_abt.apply(format_text, axis=1)
+
+df_abt
+
 
 # %%
 
@@ -104,10 +116,10 @@ X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y,
 
 
 X_train, X_val, y_train, y_val = model_selection.train_test_split(X_train, y_train,
-                                                                    test_size=0.2,
-                                                                    random_state=42,
-                                                                    stratify=y_train,
-                                                                    )
+                                                                  test_size=0.1,
+                                                                  random_state=42,
+                                                                  stratify=y_train,
+                                                                  )
 
 
 print("Tamanho do treino:", X_train.shape[0])
@@ -123,6 +135,7 @@ df_train = pd.DataFrame({"textFormat": X_train["textFormat"], "tema": X_train["t
 df_val = pd.DataFrame({"textFormat": X_val["textFormat"], "tema": X_val["tema"], "fl_desfavoravel": y_val})
 df_test = pd.DataFrame({"textFormat": X_test["textFormat"], "tema": X_test["tema"], "fl_desfavoravel": y_test})
 
-df_train.to_parquet("../dados/train.parquet", index=False)
-df_val.to_parquet("../dados/validation.parquet", index=False)
-df_test.to_parquet("../dados/test.parquet", index=False)
+df_train.to_parquet("../dados/train_2026_07_15.parquet", index=False)
+df_val.to_parquet("../dados/validation_2026_07_15.parquet", index=False)
+df_test.to_parquet("../dados/test_2026_07_15.parquet", index=False)
+# %%

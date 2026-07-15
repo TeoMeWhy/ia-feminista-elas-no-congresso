@@ -36,6 +36,7 @@ LABELS = sorted(pipe.model.config.label2id, key=pipe.model.config.label2id.get)
 
 LIME_EXPLAINER = LimeTextExplainer(class_names=CLASS_NAMES)
 
+
 def predict_proba_lime(batch_texts):
     raw = pipe(list(batch_texts), truncation=True, max_length=512, top_k=None)
     out = np.zeros((len(raw), 2))
