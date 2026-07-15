@@ -55,6 +55,8 @@ else:
     print("Formato de arquivo não suportado. Use xlsx ou csv")
     sys.exit(1)
 
+
+
 df.shape
 df[df['author_index']==1].groupby("id")["author_index"].count().sort_values(ascending=False).head(10)
 
@@ -89,6 +91,10 @@ df = (df.dropna(subset=["id"])
         .drop_duplicates(subset=["id"], keep="first")
         .reset_index(drop=True))
 
+# %%
+
+df.groupby('ano').agg({"is_favorable": "mean", "id": "count"}).sort_values(by="ano", ascending=False)
+# df = df[df['ano']>2020]
 
 # %%
 df_abt = df.copy()

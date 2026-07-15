@@ -5,7 +5,6 @@ import dotenv
 dotenv.load_dotenv()
 
 MLFLOW_URI = os.getenv("MLFLOW_URI", "http://localhost:5000")
-EXPERIMENT_DESFAVORAVEL_NAME = os.getenv("EXPERIMENT_DESFAVORAVEL_NAME", "azmina_quiteria_desfavoravel")
 
 from transformers import (
     AutoModel,
@@ -32,6 +31,10 @@ import torch.nn.functional as F
 
 import mlflow
 mlflow.set_tracking_uri(MLFLOW_URI)
+
+model_name = "neuralmind/bert-base-portuguese-cased"
+
+EXPERIMENT_DESFAVORAVEL_NAME = f"QUITERIA_desfavoravel_{model_name.replace('/', '_').replace('-', '_')}"
 mlflow.set_experiment(experiment_name=EXPERIMENT_DESFAVORAVEL_NAME)
 
 # %%
@@ -68,9 +71,7 @@ dataset = DatasetDict({
 
 # %%
 
-model_name = "neuralmind/bert-base-portuguese-cased"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
 # %%
@@ -97,49 +98,63 @@ recall = evaluate.load("recall")
 
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
-    preds = np.argmax(logits, axis=-1)
+
+    probabilities = F.softmax(torch.from_numpy(logits), dim=-1).numpy()
+    positive_class_probs = probabilities[:, 1]
     
+    preds = (positive_class_probs >= df_train['fl_desfavoravel'].mean()).astype(int)  # Use the mean of the training labels as the threshold
+    
+    roc_auc_val = metrics.roc_auc_score(labels, positive_class_probs)
+
     return {
         "accuracy": accuracy.compute(predictions=preds, references=labels)["accuracy"],
         "f1": f1.compute(predictions=preds, references=labels)["f1"],
         "precision": precision.compute(predictions=preds, references=labels)["precision"],
         "recall": recall.compute(predictions=preds, references=labels)["recall"],
+        "roc_auc": roc_auc_val,
     }
 
 # %%
 
-runs = 100
+runs = 50
 
 for i in range(runs):
     
     mlflow.start_run(run_name=f"run_{i+1}")
     
-    model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2)
+    model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2,ignore_mismatched_sizes=True)
 
     training_args = TrainingArguments(
         output_dir=f"./results/_run_{i+1}",
         learning_rate=2e-5,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
-        num_train_epochs=10,              # Aumentamos aqui...
+        
+        # gradient_accumulation_steps=2,
+        
+        # Ativa FP16 para reduzir o uso de VRAM pela metade e acelerar o treino
+        # fp16=True,
+        
+        # Desativa o checkpointing problemático do autograd
+        # gradient_checkpointing=False,  
+        
+        num_train_epochs=3,              # Aumentamos aqui...
         weight_decay=0.01,
 
-        gradient_accumulation_steps=2,
         warmup_ratio=0.1,
 
-
         eval_strategy="steps",           # Avalia a cada X passos, não só no fim da época
-        eval_steps=100,
+        eval_steps=50,
         save_strategy="steps",
-        save_steps=100,
+        save_steps=50,
         save_total_limit=1,                 # Mantém apenas o melhor checkpoint local
 
         load_best_model_at_end=True,    # Garante que o modelo final é o melhor 'checkpoint'
-        metric_for_best_model="f1",
+        metric_for_best_model="roc_auc",
         greater_is_better=True,
         # report_to="mlflow",              # Integração com MLflow
         full_determinism=True,
-        # seed=42,                       # Garante que o Trainer use essa semente internamente
+        seed=np.random.randint(0, 10000),                   # Garante que o Trainer use essa semente internamente
     )
 
     trainer = Trainer(
@@ -163,6 +178,8 @@ for i in range(runs):
 
     logits = torch.from_numpy(test_pred.predictions)
     test_pred_proba = F.softmax(logits, dim=-1).numpy()
+    
+    test_pred_label = (test_pred_proba[:, 1] >= df_train['fl_desfavoravel'].mean()).astype(int)  # Use the mean of the training labels as the threshold
 
     acc_test = metrics.accuracy_score(test_true, test_pred_label)
     auc_test = metrics.roc_auc_score(test_true, test_pred_proba[:, 1])
@@ -195,6 +212,17 @@ for i in range(runs):
 
     mlflow.transformers.log_model(model_final, "model")
     mlflow.end_run()
+    
+    # --- ADICIONE ESTE BLOCO DE LIMPEZA DE MEMÓRIA ---
+    # Limpa referências locais do Trainer
+    del trainer
+    del model
+    del model_final
+    
+    # Força a coleta de lixo do PyTorch e do sistema Python
+    import gc
+    torch.cuda.empty_cache()
+    gc.collect()
 
 
 # %%
