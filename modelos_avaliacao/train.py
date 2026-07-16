@@ -43,7 +43,6 @@ df_train = pd.read_parquet("../dados/train_2026_07_15.parquet")
 df_val = pd.read_parquet("../dados/validation_2026_07_15.parquet")
 df_test = pd.read_parquet("../dados/test_2026_07_15.parquet")
 
-df_test.head()
 
 # %%
 
@@ -116,13 +115,13 @@ def compute_metrics(eval_pred):
 
 # %%
 
-runs = 50
+runs = 100
 
+model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2,ignore_mismatched_sizes=True)
 for i in range(runs):
     
     mlflow.start_run(run_name=f"run_{i+1}")
     
-    model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2,ignore_mismatched_sizes=True)
 
     training_args = TrainingArguments(
         output_dir=f"./results/_run_{i+1}",
@@ -138,7 +137,7 @@ for i in range(runs):
         # Desativa o checkpointing problemático do autograd
         # gradient_checkpointing=False,  
         
-        num_train_epochs=3,              # Aumentamos aqui...
+        num_train_epochs=10,              # Aumentamos aqui...
         weight_decay=0.01,
 
         warmup_ratio=0.1,
@@ -154,7 +153,7 @@ for i in range(runs):
         greater_is_better=True,
         # report_to="mlflow",              # Integração com MLflow
         full_determinism=True,
-        seed=np.random.randint(0, 10000),                   # Garante que o Trainer use essa semente internamente
+        # seed=np.random.randint(0, 10000),                   # Garante que o Trainer use essa semente internamente
     )
 
     trainer = Trainer(
@@ -165,7 +164,7 @@ for i in range(runs):
         processing_class=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)] # Para se não melhorar em 3 avaliações
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=6)] # Para se não melhorar em 3 avaliações
     )
 
     trainer.train()
@@ -213,16 +212,6 @@ for i in range(runs):
     mlflow.transformers.log_model(model_final, "model")
     mlflow.end_run()
     
-    # --- ADICIONE ESTE BLOCO DE LIMPEZA DE MEMÓRIA ---
-    # Limpa referências locais do Trainer
-    del trainer
-    del model
-    del model_final
-    
-    # Força a coleta de lixo do PyTorch e do sistema Python
-    import gc
-    torch.cuda.empty_cache()
-    gc.collect()
 
 
 # %%

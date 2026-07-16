@@ -36,7 +36,9 @@ model_run_stats
 # %%
 
 
-df_runs = mlflow.search_runs(experiment_names=["QUITERIA_desfavoravel_neuralmind_bert_base_portuguese_cased"], filter_string="attributes.status = 'FINISHED'")
+exp_name = "QUITERIA_desfavoravel_neuralmind_bert_base_portuguese_cased"
+
+df_runs = mlflow.search_runs(experiment_names=[exp_name], filter_string="attributes.status = 'FINISHED'")
 df_runs =df_runs.dropna(subset=['metrics.accuracy'])
 df_runs
 
@@ -111,9 +113,8 @@ for j in range(i + 1, 8):
     fig.delaxes(axes[j])
 
 plt.tight_layout()
-plt.show()
+plt.savefig(f"validation_plots_{exp_name}.png")
 
-# %%
-print(stats)
+stats.to_markdown(open(f"validation_stats_{exp_name}.md", "w"), tablefmt="pipe")
 
 # %%

@@ -106,7 +106,7 @@ df_abt["partido"] = df_abt["partido"].fillna("")
 df_abt["fl_desfavoravel"] = (df_abt["avaliacao"] == 'Desfavorável').astype(int)
 df_abt["textFormat"] = df_abt.apply(format_text, axis=1)
 
-df_abt
+df_abt.groupby('ano').agg({"fl_desfavoravel": "mean", "id": "count"}).sort_values(by="ano", ascending=False)
 
 
 # %%
