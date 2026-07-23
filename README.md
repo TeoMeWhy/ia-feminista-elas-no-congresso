@@ -61,7 +61,7 @@ O código-fonte do robô de coleta está disponível em:
 
 Os dados utilizados para o treinamento dos modelos consistem em **resumos de proposições legislativas** em tramitação no Congresso Nacional. Esses dados foram **pré-processados e rotulados manualmente** durante quatro anos e meio, servindo de base para o fine-tuning dos classificadores.
 
-Os dados rotulados estão disponíveis no Hugging Face: [`azmina/ementas_congresso`](https://huggingface.co/datasets/azmina/ementas_congresso)
+Os dados rotulados estão disponíveis na API: [`api.elasnocongresso.com.br/api/v1/docs`](https://api.elasnocongresso.com.br/api/v1/docs)
 
 ---
 
@@ -164,8 +164,8 @@ Este modelo classifica PLs como:
 - **Classe 1 (Desfavorável)**: Representam retrocessos, ameaçam políticas públicas ou ampliam desigualdades.
 
 O modelo campeão atual possui:
-- F1-score de **0.9372** para Classe 0
-- F1-score de **0.7536** para Classe 1
+- F1-score de **0.92** para Classe 0
+- F1-score de **0.67** para Classe 1
 
 
 ### Avaliação
@@ -174,10 +174,10 @@ O modelo atingiu as seguintes métricas no dataset de `teste`:
 
 |                | Precision | Recall | F1-Score | Support |
 |----------------|-----------|--------|----------|---------|
-| Class 0        | 0.9202    | 0.9548 | 0.9372   | 133     |
-| Class 1        | 0.8125    | 0.7027 | 0.7536   | 37      |
-| Accuracy       |           |        | 0.9000   | 170     |
-| AUC Score      |           |        | 0.9022   | 170     |
+| Class 0        | 0.89      | 0.94   | 0.92     | 242     |
+| Class 1        | 0.75      | 0.61   | 0.67     | 71      |
+| Accuracy       |           |        | 0.87     | 313     |
+| AUC Score      |           |        | 0.85     | 313     |
 
 
 ## 🎖️ Conheça Maria Quitéria, nossa homenageada
