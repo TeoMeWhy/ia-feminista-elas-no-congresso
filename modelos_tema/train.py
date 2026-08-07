@@ -34,7 +34,7 @@ mlflow.set_tracking_uri(MLFLOW_URI)
 
 model_name = "neuralmind/bert-base-portuguese-cased"
 
-EXPERIMENT_DESFAVORAVEL_NAME = f"QUITERIA_desfavoravel_{model_name.replace('/', '_').replace('-', '_')}"
+EXPERIMENT_DESFAVORAVEL_NAME = f"QUITERIA_tema_{model_name.replace('/', '_').replace('-', '_')}"
 mlflow.set_experiment(experiment_name=EXPERIMENT_DESFAVORAVEL_NAME)
 
 # %%
@@ -43,6 +43,24 @@ df_train = pd.read_parquet("../dados/train.parquet")
 df_val = pd.read_parquet("../dados/validation.parquet")
 df_test = pd.read_parquet("../dados/test.parquet")
 
+df_train['tema'] = df_train['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
+df_val['tema'] = df_val['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
+df_test['tema'] = df_test['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
+
+# Create a stable string-to-ID classification mapping
+themes_list = sorted(df_train['tema'].dropna().unique().tolist())
+theme2id = {theme: idx for idx, theme in enumerate(themes_list)}
+id2theme = {idx: theme for idx, theme in enumerate(themes_list)}
+num_labels = len(themes_list)
+
+print("Unique df_train themes:", num_labels, "->", themes_list)
+print("Unique df_val:", df_val['tema'].nunique())
+print("Unique df_test:", df_test['tema'].nunique())
+
+# Map the string themes to target IDs
+df_train['tema_id'] = df_train['tema'].map(theme2id)
+df_val['tema_id'] = df_val['tema'].map(theme2id)
+df_test['tema_id'] = df_test['tema'].map(theme2id)
 
 # %%
 
@@ -81,7 +99,8 @@ def preprocess(examples):
         truncation=True,
         max_length=512,
     )
-    tokens["labels"] = examples["fl_desfavoravel"]
+    # Correctly assign mapped theme ID instead of loop indexes
+    tokens["labels"] = [theme2id[tema] for tema in examples["tema"]]
     return tokens
 
 tokenized_datasets = dataset.map(preprocess, batched=True)
@@ -91,6 +110,7 @@ tokenized_datasets
 # %%
 
 accuracy = evaluate.load("accuracy")
+# Load evaluation metrics with multi-class (macro) properties in mind
 f1 = evaluate.load("f1")
 precision = evaluate.load("precision")
 recall = evaluate.load("recall")
@@ -99,25 +119,22 @@ def compute_metrics(eval_pred):
     logits, labels = eval_pred
 
     probabilities = F.softmax(torch.from_numpy(logits), dim=-1).numpy()
-    positive_class_probs = probabilities[:, 1]
-    
-    preds = (positive_class_probs >= df_train['fl_desfavoravel'].mean()).astype(int)  # Use the mean of the training labels as the threshold
-    
-    roc_auc_val = metrics.roc_auc_score(labels, positive_class_probs)
+    preds = probabilities.argmax(axis=-1)
 
     return {
         "accuracy": accuracy.compute(predictions=preds, references=labels)["accuracy"],
-        "f1": f1.compute(predictions=preds, references=labels)["f1"],
-        "precision": precision.compute(predictions=preds, references=labels)["precision"],
-        "recall": recall.compute(predictions=preds, references=labels)["recall"],
-        "roc_auc": roc_auc_val,
+        "f1_macro": f1.compute(predictions=preds, references=labels, average="macro")["f1"],
+        "precision_macro": precision.compute(predictions=preds, references=labels, average="macro")["precision"],
+        "recall_macro": recall.compute(predictions=preds, references=labels, average="macro")["recall"],
     }
 
 # %%
 
 runs = 100
 
-model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2,ignore_mismatched_sizes=True)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels,
+                                                           ignore_mismatched_sizes=True)
+
 for i in range(runs):
     
     mlflow.start_run(run_name=f"run_{i+1}")
@@ -128,6 +145,7 @@ for i in range(runs):
         learning_rate=2e-5,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
+        gradient_accumulation_steps=4,
         
         num_train_epochs=10,                # Aumentamos aqui...
         weight_decay=0.01,
@@ -141,7 +159,7 @@ for i in range(runs):
         save_total_limit=1,                 # Mantém apenas o melhor checkpoint local
 
         load_best_model_at_end=True,        # Garante que o modelo final é o melhor 'checkpoint'
-        metric_for_best_model="roc_auc",
+        metric_for_best_model="f1_macro",
         greater_is_better=True,
         full_determinism=True,
     )
@@ -163,32 +181,26 @@ for i in range(runs):
     test_true = tokenized_datasets["test"]['labels']
 
     test_pred = trainer.predict(tokenized_datasets["test"])
+    # Resolve predicting multi-class output instead of binary threshold
     test_pred_label = np.apply_along_axis(np.argmax, arr=test_pred.predictions, axis=1)
 
-    logits = torch.from_numpy(test_pred.predictions)
-    test_pred_proba = F.softmax(logits, dim=-1).numpy()
-    
-    test_pred_label = (test_pred_proba[:, 1] >= df_train['fl_desfavoravel'].mean()).astype(int)
-
     acc_test = metrics.accuracy_score(test_true, test_pred_label)
-    auc_test = metrics.roc_auc_score(test_true, test_pred_proba[:, 1])
-    f1_test_0 = metrics.f1_score(test_true, test_pred_label, pos_label=0)
-    f1_test_1 = metrics.f1_score(test_true, test_pred_label, pos_label=1)
-    precision_test_0 = metrics.precision_score(test_true, test_pred_label, pos_label=0)
-    precision_test_1 = metrics.precision_score(test_true, test_pred_label, pos_label=1)
-    recall_test_0 = metrics.recall_score(test_true, test_pred_label, pos_label=0)
-    recall_test_1 = metrics.recall_score(test_true, test_pred_label, pos_label=1)
+    f1_test_macro = metrics.f1_score(test_true, test_pred_label, average="macro")
+    precision_test_macro = metrics.precision_score(test_true, test_pred_label, average="macro")
+    recall_test_macro = metrics.recall_score(test_true, test_pred_label, average="macro")
 
     metrics_dict = {
         "accuracy": acc_test,
-        "roc_auc": auc_test,
-        "f1_0": f1_test_0,
-        "f1_1": f1_test_1,
-        "precision_0": precision_test_0,
-        "precision_1": precision_test_1,
-        "recall_0": recall_test_0,
-        "recall_1": recall_test_1,
+        "f1_macro": f1_test_macro,
+        "precision_macro": precision_test_macro,
+        "recall_macro": recall_test_macro,
     }
+
+    # Log per-class F1 metric scores dynamically
+    f1_per_class = metrics.f1_score(test_true, test_pred_label, average=None)
+    for class_id, score in enumerate(f1_per_class):
+        class_name = id2theme[class_id]
+        metrics_dict[f"f1_class_{class_name}"] = score
 
     mlflow.log_metrics(metrics_dict)
 
