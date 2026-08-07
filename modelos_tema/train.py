@@ -47,7 +47,6 @@ df_train['tema'] = df_train['tema'].apply(lambda x: x.replace(",", "").replace("
 df_val['tema'] = df_val['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
 df_test['tema'] = df_test['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
 
-# Create a stable string-to-ID classification mapping
 themes_list = sorted(df_train['tema'].dropna().unique().tolist())
 theme2id = {theme: idx for idx, theme in enumerate(themes_list)}
 id2theme = {idx: theme for idx, theme in enumerate(themes_list)}
@@ -57,10 +56,10 @@ print("Unique df_train themes:", num_labels, "->", themes_list)
 print("Unique df_val:", df_val['tema'].nunique())
 print("Unique df_test:", df_test['tema'].nunique())
 
-# Map the string themes to target IDs
 df_train['tema_id'] = df_train['tema'].map(theme2id)
 df_val['tema_id'] = df_val['tema'].map(theme2id)
 df_test['tema_id'] = df_test['tema'].map(theme2id)
+
 
 # %%
 
@@ -99,7 +98,6 @@ def preprocess(examples):
         truncation=True,
         max_length=512,
     )
-    # Correctly assign mapped theme ID instead of loop indexes
     tokens["labels"] = [theme2id[tema] for tema in examples["tema"]]
     return tokens
 
@@ -110,7 +108,6 @@ tokenized_datasets
 # %%
 
 accuracy = evaluate.load("accuracy")
-# Load evaluation metrics with multi-class (macro) properties in mind
 f1 = evaluate.load("f1")
 precision = evaluate.load("precision")
 recall = evaluate.load("recall")
@@ -196,7 +193,6 @@ for i in range(runs):
         "recall_macro": recall_test_macro,
     }
 
-    # Log per-class F1 metric scores dynamically
     f1_per_class = metrics.f1_score(test_true, test_pred_label, average=None)
     for class_id, score in enumerate(f1_per_class):
         class_name = id2theme[class_id]

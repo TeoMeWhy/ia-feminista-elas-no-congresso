@@ -83,75 +83,78 @@ Os dados rotulados estão disponíveis na API: [`api.elasnocongresso.com.br/api/
 
 Os temas utilizados para classificação dos projetos de lei são:
 
-```
-{0: 'economia',
- 1: 'genero',
- 2: 'dignidade sexual',
- 3: 'violencia contra a mulher',
- 4: 'politica',
- 5: 'direitos sexuais e reprodutivos',
- 6: 'direitos sociais',
- 7: 'maternidade',
- 8: 'feminicidio'}
+```json
+{
+  0: "Direitos_Sexuais_e_Reprodutivos",
+  1: "Educação_e_Cultura",
+  2: "Família_Parentalidade_e_Relações_Civis",
+  3: "Igualdade_e_Antidiscriminação",
+  4: "Infância_e_Adolescência",
+  5: "LGBTQIAPN",
+  6: "Participação_Política_e_Institucionalidade",
+  7: "Saúde",
+  8: "Trabalho_Economia_Cuidado_e_Proteção_Social",
+  9: "Violências_de_Gênero"
+}
 ```
 
 ### Definição dos temas:
 
-- **economia**: todas as proposições que envolvem questões de produção, distribuição, acumulação e consumo de bens materiais com recorte de gênero. A categoria inclui, por exemplo, a concessão de benefícios financeiros exclusivos para mulheres e pessoas LGBT, participação econômica de mulheres e outros grupos, abordando temas como igualdade salarial, empreendedorismo feminino, inclusão no mercado de trabalho, acesso a crédito e medidas para combater a precarização do trabalho feminino.
+**Direitos Sexuais e Reprodutivos**: Abrange proposições sobre autonomia corporal, direitos reprodutivos e sexuais, acesso à contracepção, aborto, planejamento familiar, reprodução assistida e garantia de direitos ligados à sexualidade.
 
-- **gênero**: construções sociais e culturais atribuídas aos papéis masculinos e femininos na sociedade, que influenciam comportamentos, oportunidades e relações entre os sexos. O conceito de gênero é fundamental para entender desigualdades sociais e promover políticas que visem à equidade. Este conjunto de proposições inclui propostas sobre ideologia de gênero, igualdade de gênero, lgbtfobia, orientação sexual e identidade de gênero, propostas para promover a igualdade e eliminar discriminações e preconceitos baseados no gênero, medidas para garantir direitos e oportunidades iguais para mulheres, homens, pessoas trans e não-binárias em áreas como trabalho, educação, saúde, segurança e participação política.
+**Educação e Cultura**: Abrange projetos relacionados à educação formal e não formal, produção cultural, liberdade de ensino, conteúdos curriculares, memória e preservação histórica, homenagens e reconhecimento de personalidades ou marcos relevantes para a promoção da igualdade de gênero, da diversidade e dos direitos humanos. 
 
-- **dignidade sexual**: refere-se ao reconhecimento do valor de cada indivíduo em relação à sua sexualidade. Isso implica que todas as pessoas têm o direito de viver sua sexualidade de maneira plena e respeitosa, sem discriminação ou violência. A dignidade sexual garante que as relações interpessoais sejam baseadas no respeito mútuo e no consentimento. Neste conjunto de projetos de lei, estão incluídos nessa categoria todos os textos que envolvem crimes contra a dignidade sexual, incluindo estupro e atos relacionados, violação sexual mediante fraude, assédio sexual, divulgação de cena de sexo ou de pornografia, tráfico de pessoas e ato obsceno.
+**Família, Parentalidade e Relações Civis**: Engloba proposições sobre organização familiar, casamento, união estável, divórcio, filiação, guarda, adoção, poder familiar, registro civil e demais direitos e deveres nas relações familiares.
 
-- **violência contra a mulher**: qualquer ato de violência baseado no gênero que resulte em danos para mulheres. Inclui projetos para prevenir, punir e erradicar a violência contra mulheres em todas as suas formas, incluindo violência física, psicológica, sexual, patrimonial e moral. Envolvem políticas de proteção, atendimento e apoio às vítimas, bem como campanhas educativas e ações para responsabilizar os agressores. Essa categoria inclui todos os tipos de violência contra mulheres, com exceção dos crimes contra a dignidade sexual, que estão agrupados em categoria homônima.
+**Igualdade e Antidiscriminação**: Contempla iniciativas destinadas a promover a igualdade de direitos e oportunidades e a combater discriminações baseadas em gênero, sexo, orientação sexual, identidade de gênero, raça, território e outras formas de desigualdade.
 
-- política: atividade relacionada à governança do Estado nos níveis municipal, estadual e federal, e às relações de poder entre indivíduos ou grupos. Envolve proposições legislativas voltadas à participação política das mulheres e à promoção da equidade de gênero na esfera política. Incluem propostas para aumentar a representatividade feminina em cargos eletivos e de liderança, além de garantir a participação em processos de tomada de decisão e elaboração de políticas públicas.
+**Infância e Adolescência**: Reúne proposições relacionadas à promoção, proteção e garantia dos direitos de crianças e adolescentes, com atenção especial aos impactos sobre meninas e adolescentes em perspectiva de gênero. Inclui temas como proteção integral, convivência familiar e comunitária, desenvolvimento infantil, primeira infância, violência contra crianças e adolescentes, trabalho infantil, acolhimento institucional, medidas socioeducativas, ambiente digital, proteção de dados, uso de tecnologias, participação social, acesso a direitos e políticas públicas voltadas à infância e à adolescência.
 
-- **direitos sexuais e reprodutivos**: conjunto de direitos humanos que garantem a todos os indivíduos liberdade e capacidade para decidir sobre sua vida sexual e reprodutiva. Isso inclui o direito à informação, à educação, ao acesso a serviços de saúde reprodutiva, ao aborto, ao planejamento familiar, assistência médica durante a gravidez, parto e pós-parto e ao livre exercício da sexualidade.
+**LGBTQIAPN+**: Reúne propostas que tratam dos direitos, da cidadania, da proteção e do reconhecimento das pessoas LGBTQIAPN+, incluindo identidade de gênero, orientação sexual, acesso a direitos e combate à violência e à discriminação.
 
-- **direitos sociais**: aqueles que garantem condições mínimas de vida digna a todos os indivíduos, incluindo acesso à educação, saúde, trabalho, moradia e seguridade social. Esses direitos visam promover a igualdade e a justiça social, assegurando que todos tenham oportunidades iguais para desenvolver seu potencial humano.
+**Participação Política e Institucionalidade**: Reúne iniciativas que tratam da participação de mulheres e da população LGBTQIAPN+ nos espaços de poder, representação política, cargos e funcionamento das instituições públicas, mecanismos de participação social e políticas públicas para promoção da igualdade de gênero.
 
-- **maternidade**: é a qualidade ou estado de ser mãe, envolvendo não somente o ato biológico da gestação e do parto, mas também o cuidado, educação e proteção oferecidos à criança. Inclui iniciativas sobre licença-maternidade, salário-maternidade e adoção, proteção no ambiente de trabalho, acesso a creches, políticas de apoio à amamentação e assistência a mães em situação de vulnerabilidade.
+**Saúde**: Inclui projetos voltados à promoção, prevenção e acesso à saúde, com atenção às necessidades específicas de mulheres, pessoas gestantes, pessoas LGBTQIAPN+ e outros grupos em situação de vulnerabilidade. Abrange temas como saúde materna, menstruação e dignidade menstrual, menopausa, climatério, cânceres relacionados ao aparelho reprodutor, saúde mental, acesso a medicamentos, prevenção de doenças e organização dos serviços de saúde.
 
-- **feminicídio**: assassinato de mulheres motivado por questões de gênero, ou seja, por ela ser do sexo feminino. Inclui projetos para prevenir, combater e punir o feminicídio, como políticas para a prevenção, investigação e julgamento de crimes de feminicídio, bem como medidas de apoio e proteção às vítimas de violência de gênero.
+**Trabalho, Economia, Cuidado e Proteção Social**: Inclui propostas relacionadas ao mercado de trabalho, economia, geração de renda, empreendedorismo, previdência, seguridade e assistência social, políticas de proteção econômica e social, maternidade, licença-maternidade e outros direitos trabalhistas, acesso a creches e políticas de cuidado, valorização do trabalho doméstico e de cuidados, regulamentação ou direitos relacionados à prostituição, bem como iniciativas que abordem os impactos das mudanças climáticas e das políticas ambientais sobre as condições de vida, o trabalho, o cuidado e a proteção social. 
+
+**Violências de Gênero**: Reúne propostas relacionadas à prevenção, enfrentamento, responsabilização e reparação das diversas formas de violência baseadas em gênero, incluindo assédio, violência doméstica, sexual, política, institucional, obstétrica, digital e feminicídio, além de proposições específicas sobre acesso a armas ou que pretendem realizar alterações na Lei Maria da Penha.
+
+### Treinamento
+
+**Modelo:** neuralmind/bert-base-portuguese-cased
+
+Foi realizado um treinamento sequencial de 65 modelos com os mesmos hiperparâmetros. Após cada interação de treino, o modelo é salvo no `MLFlow` e utilizado na próxima iteração de treinamento com os mesmos hiperparâmetros e estratégia de treino.
+
+Selecionamos o modelo campeão como aquele que obteve melhor métrica de F1 Macro na base de testes. Repare que não necessariamente o modelo campeão é o da última interação.
+
+Na verdade, no nosso caso, o modelo campeão é o resultado da interação 35 no nosso caso.
+
+No lugar de deixar o modelo ser treinado em muitas épocas independente da melhoria de performance, colocamos um critério de parada caso as métricas não melhorem em 6 passos. Assim, na próxima interação, aproevitamos os pesos encontrado para fazer um novo treinamento, com a expectativa de melhoria gradual do modelo.
 
 
 ### Avaliação
 
-Para avaliação da linha base (baseline), foram utilizados dois modelos de zero-shot e um modelo Naive-Bayes. Para a avaliação final, foram utilizados diversos modelos baseados na arquitetura Transformer, tanto da família BERT quanto aplicações de modelos generativos.
+O modelo campeão obteve as seguintes métricas na base de `teste`.
 
-| Modelo                                 | Precisão | Recall | F1   |
-|---------------------------------------|-----------|--------|------|
-| Naive-Bayes                           | 0.54      | 0.16   | 0.16 |
-| [mDeBERTa-v3-base-mnli-xnli](https://huggingface.co/MoritzLaurer/mDeBERTa-v3-base-mnli-xnli) (zero-shot)| 0.32      | 0.28   | 0.27 |
-| [facebook/bart-large-mnli](https://huggingface.co/facebook/bart-large-mnli) (zero-shot)  | 0.34      | 0.25   | 0.25 |
-| [legal-bert-base-cased-ptbr](https://huggingface.co/dominguesm/legal-bert-base-cased-ptbr)                             | 0.75      | 0.63   | 0.66 |
-| [DeBERTina](tgsc/debertina-base-32k-vocab) | 0.82 | 0.74   | 0.75 |
-| [BERTimbau large](https://huggingface.co/neuralmind/bert-large-portuguese-cased/)                             | 0.82      | 0.74   | 0.75 |
-| [Gemma-9b](https://huggingface.co/unsloth/gemma-2-9b-bnb-4bit)                                 | 0.70      | 0.70   | 0.69 |
-| [LLama3-8b](https://huggingface.co/unsloth/llama-3-8b-Instruct-bnb-4bit)                                | 0.66      | 0.61   | 0.61 |
-| [**Congretimbau**](https://huggingface.co/belisards/congretimbau)                          | **0.80**      | **0.79**   | **0.79** |
+| Métrica | Valor |
+|---|---|
+| Acurácia| 0,82 |
+| F1 Macro| 0,71|
+| Precisão Macro| 0,73|
+| Recall Macro| 0,72|
+| F1 Direitos Sexuais e Reprodutivos| 0,72|
+| F1 Educação e Cultura| 0,73|
+| F1 Família Parentalidade e Relações Civis| 0,73|
+| F1 Igualdade e Antidiscriminação| 0,67|
+| F1 Infância e Adolescência| 0,31|
+| F1 LGBTQIAPN| 0,76|
+| F1 Participação Política e Institucionalidade| 0,59|
+| F1 Saúde| 0,84|
+| F1 Trabalho Economia Cuidado e Proteção Social| 0,81|
+| F1 Violências de Gênero| 0,91 |
 
-Melhor desempenho: **Congretimbau**, com F1-score de 0.79  
-
-
-O modelo com melhor desempenho foi adotado em produção e atingiu as seguintes métricas no conjunto de teste:
-
-|                               | Precision | Recall | F1-Score | Support |
-|-------------------------------|-----------|--------|----------|---------|
-| Dignidade Sexual              | 0.94      | 0.88   | 0.91     | 17      |
-| Direitos Sexuais e Reprodutivos| 0.89      | 0.84   | 0.86     | 19      |
-| Direitos Sociais              | 0.61      | 0.58   | 0.59     | 19      |
-| Economia                      | 0.78      | 0.50   | 0.61     | 14      |
-| Feminicidio                   | 0.67      | 0.80   | 0.73     | 5       |
-| Genero                        | 0.81      | 1.00   | 0.90     | 13      |
-| Maternidade                   | 0.70      | 0.74   | 0.72     | 19      |
-| Politica                      | 1.00      | 0.88   | 0.93     | 8       |
-| Violencia Contra a Mulher     | 0.86      | 0.93   | 0.89     | 54      |
-| **Accuracy**                  |           |        | 0.82     | 168     |
-| **Macro Avg**                 | 0.81      | 0.79   | 0.79     | 168     |
-| **Weighted Avg**              | 0.82      | 0.82   | 0.81     | 168     |
-
+Nota-se a baixa performance em F1 para as categorias `Infância e Adolescência`, `Participação Política e Institucionalidade` e `Igualdade e Antidiscriminação`. Sendo estas as categorias com menor quantidade de amostras.
 
 
 ### Modelo de avaliação das posições dos projetos
@@ -206,6 +209,7 @@ Os trabalhos listados propõem diferentes categorizações em documentos do âmb
 - mlflow_skinny==3.12.0
 - mlflow_tracing==3.12.0
 - numpy==2.4.6
+- openpyxl==3.1.5
 - python-dotenv==1.2.2
 - scikit_learn==1.9.0
 - seaborn==0.13.2
