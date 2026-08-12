@@ -8,12 +8,12 @@ MLFLOW_URI = os.getenv("MLFLOW_URI", "http://localhost:5000")
 
 from transformers import (
     AutoModel,
-    AutoTokenizer,
     AutoModelForSequenceClassification,
-    EarlyStoppingCallback,
-    TrainingArguments,
-    Trainer,
+    AutoTokenizer,
     DataCollatorWithPadding,
+    EarlyStoppingCallback,
+    Trainer,
+    TrainingArguments,
     pipeline,
 )
 
