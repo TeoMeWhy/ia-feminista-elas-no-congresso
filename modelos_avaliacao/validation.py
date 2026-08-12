@@ -64,7 +64,7 @@ cols = [
 df_runs = df_runs[cols].dropna()
 
 #%%
-rename_cols = {i:i.split(".")[1] for i in cols if i.startswith("metrics.")}
+rename_cols = {i: i.split(".")[1] for i in cols if i.startswith("metrics.")}
 df_runs = df_runs.rename(columns=rename_cols)
 
 stats = df_runs.describe().T
