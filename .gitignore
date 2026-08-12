@@ -5,6 +5,7 @@
 *.db
 *.parquet
 *.csv
+*.xlsx
 
 __pycache__
 

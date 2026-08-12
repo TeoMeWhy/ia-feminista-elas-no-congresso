@@ -7,7 +7,6 @@ dotenv.load_dotenv()
 MLFLOW_URI = os.getenv("MLFLOW_URI", "http://localhost:5000")
 
 from transformers import (
-    AutoModel,
     AutoTokenizer,
     AutoModelForSequenceClassification,
     EarlyStoppingCallback,
