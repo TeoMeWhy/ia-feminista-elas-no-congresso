@@ -121,7 +121,6 @@ model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels
 for i in range(runs):
     
     mlflow.start_run(run_name=f"run_{i+1}")
-    
 
     training_args = TrainingArguments(
         output_dir=f"./results/_run_{i+1}",
