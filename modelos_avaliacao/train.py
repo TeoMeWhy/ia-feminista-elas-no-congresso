@@ -117,7 +117,7 @@ def compute_metrics(eval_pred):
 
 runs = 100
 
-model = AutoModelForSequenceClassification.from_pretrained(model_name,num_labels=2,ignore_mismatched_sizes=True)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2, ignore_mismatched_sizes=True)
 for i in range(runs):
     
     mlflow.start_run(run_name=f"run_{i+1}")
