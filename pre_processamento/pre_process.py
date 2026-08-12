@@ -46,12 +46,16 @@ def format_text(row):
 
 # %%
 
-if DATA_PATH.endswith("xlsx"):
+if not DATA_PATH:
+    print("Definir o arquivo via DATA_PATH é obrigatório.")
+    sys.exit(1)
+elif not Path(DATA_PATH).exists():
+    print("Arquivo definido não existe.")
+    sys.exit(1)
+elif DATA_PATH.endswith("xlsx"):
     df = pd.read_excel(DATA_PATH)
-
 elif DATA_PATH.endswith("csv"):
     df = pd.read_csv(DATA_PATH)
-
 else:
     print("Formato de arquivo não suportado. Use xlsx ou csv")
     sys.exit(1)
