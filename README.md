@@ -67,13 +67,34 @@ Os dados rotulados estão disponíveis na API: [`api.elasnocongresso.com.br/api/
 
 ## 🧪 Etapas do Projeto
 
-1. **Pré-processamento de dados**: scripts de limpeza e preparação das proposições legislativas;
-2. **Fine-tuning**: ajuste fino dos modelos com base nos dados rotulados manualmente;
+### **Pré-processamento de dados**: scripts de limpeza e preparação das proposições legislativas;
+
+#### Preparação
+
+Para treinamento, consideramos apenas projetos distintos, deduplicando quando ha `id`s de projetos repetidos, utilizando apenas o principal autor do projeto.
+
+#### Particionamento da base
+
+A partir dos dados completos, realizados uma amostragem aleatória estratificada considerando a variável `fl_desfavorável`.
+
+| Base | Quantidade de Projetos (%) |
+|---|---:|
+| Treino | 2.527 (80,94%) |
+| Validação | 282 (09,03%) |
+| Teste | 313 (10,02%) |
+
+
+#### **Estratégia de Fine-tuning**
+
+Para treinamento do modelo, consideramos o modelo `neuralmind/bert-base-portuguese-cased` para ambos os desafios de inferência. No lugar de ajustar apenas uma vez o modelo e avaliá-lo, foi realizada uma interação (loop) de treino com early-stop de 6 steps em caso de não melhoria da métrica objetivo. Assim, este melhor modelo é passado para a próxima iteração repetindo o processo.
+
 3. **Avaliação**: desempenho dos modelos medido por métricas como:
    - Acurácia
    - F1-Score
    - Precisão
    - Recall
+
+Vale considerar que a comparação dos resultados entre as difrentes versões do modelo (a atual e a v1) não é válida, uma vez que temos uma composição das bases diferente.
 
 ---
 
