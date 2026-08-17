@@ -94,11 +94,13 @@ Para treinamento do modelo, consideramos o modelo `neuralmind/bert-base-portugue
    - Precisão
    - Recall
 
-Vale considerar que a comparação dos resultados entre as difrentes versões do modelo (a atual e a v1) não é válida, uma vez que temos uma composição das bases diferente.
+Vale considerar que a comparação dos resultados entre as difrentes versões do modelo entre os não é válida, uma vez que temos uma composição das bases diferente. Tanto por questão de novos dados (novos projetos de lei avaliados), como também, um novo sorteio aleatório utilizando extratificação.
+
+Ainda assim, nossa expectativa é aumentar os valores obtidos anteriormente nas métricas de ajuste.
 
 ---
 
-## 📂 Modelo
+## 📂 Modelos
 
 ### Modelo de Classificação de Temas
 
@@ -119,7 +121,7 @@ Os temas utilizados para classificação dos projetos de lei são:
 }
 ```
 
-### Definição dos temas:
+#### Definição dos temas:
 
 **Direitos Sexuais e Reprodutivos**: Abrange proposições sobre autonomia corporal, direitos reprodutivos e sexuais, acesso à contracepção, aborto, planejamento familiar, reprodução assistida e garantia de direitos ligados à sexualidade.
 
@@ -141,7 +143,7 @@ Os temas utilizados para classificação dos projetos de lei são:
 
 **Violências de Gênero**: Reúne propostas relacionadas à prevenção, enfrentamento, responsabilização e reparação das diversas formas de violência baseadas em gênero, incluindo assédio, violência doméstica, sexual, política, institucional, obstétrica, digital e feminicídio, além de proposições específicas sobre acesso a armas ou que pretendem realizar alterações na Lei Maria da Penha.
 
-### Treinamento
+#### Treinamento
 
 **Modelo:** neuralmind/bert-base-portuguese-cased
 
@@ -151,10 +153,10 @@ Selecionamos o modelo campeão como aquele que obteve melhor métrica de F1 Macr
 
 Na verdade, no nosso caso, o modelo campeão é o resultado da interação 35 no nosso caso.
 
-No lugar de deixar o modelo ser treinado em muitas épocas independente da melhoria de performance, colocamos um critério de parada caso as métricas não melhorem em 6 passos. Assim, na próxima interação, aproevitamos os pesos encontrado para fazer um novo treinamento, com a expectativa de melhoria gradual do modelo.
+No lugar de deixar o modelo ser treinado em muitas épocas independente da melhoria de performance, colocamos um critério de parada caso as métricas não melhorem em 6 passos. Assim, na próxima interação, aproveitamos os pesos encontrado para fazer um novo treinamento, com a expectativa de melhoria gradual do modelo.
 
 
-### Avaliação
+#### Avaliação
 
 O modelo campeão obteve as seguintes métricas na base de `teste`.
 
@@ -177,6 +179,7 @@ O modelo campeão obteve as seguintes métricas na base de `teste`.
 
 Nota-se a baixa performance em F1 para as categorias `Infância e Adolescência`, `Participação Política e Institucionalidade` e `Igualdade e Antidiscriminação`. Sendo estas as categorias com menor quantidade de amostras.
 
+---
 
 ### Modelo de avaliação das posições dos projetos
 
@@ -187,12 +190,21 @@ Este modelo classifica PLs como:
 - **Classe 0 (Favorável)**: Promovem direitos das mulheres, igualdade de gênero, garantias legais.
 - **Classe 1 (Desfavorável)**: Representam retrocessos, ameaçam políticas públicas ou ampliam desigualdades.
 
+#### Treinamento
+
+**Modelo:** neuralmind/bert-base-portuguese-cased
+
+A estratégia adotada de treinamento foi análoga ao modelo de temas. Realizamos um treinamento sequencial de 100 modelos com os mesmos hiperparâmetros. Após cada interação de treino, o modelo é salvo no `MLFlow` e utilizado na próxima iteração de treinamento com os mesmos hiperparâmetros e estratégia de treino.
+
+Selecionamos o modelo campeão como aquele que obteve melhor métrica de F1 na base de testes.
+
+#### Avaliação
+
 O modelo campeão atual possui:
 - F1-score de **0.92** para Classe 0
 - F1-score de **0.67** para Classe 1
 
-
-### Avaliação
+Importande destacar que os valores obtidos nas métricas de performance são calculado com um ponto de corte `cutoff` considerando a média da variável resposta, isto é, 0.2254. Assim, projetos com probabilidade maior que 0.2254 atribuida pelo menos, serão considerados **desfavoráveis**.
 
 O modelo atingiu as seguintes métricas no dataset de `teste`:
 
