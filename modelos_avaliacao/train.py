@@ -161,7 +161,6 @@ for i in range(runs):
     test_true = tokenized_datasets["test"]['labels']
 
     test_pred = trainer.predict(tokenized_datasets["test"])
-    test_pred_label = np.apply_along_axis(np.argmax, arr=test_pred.predictions, axis=1)
 
     logits = torch.from_numpy(test_pred.predictions)
     test_pred_proba = F.softmax(logits, dim=-1).numpy()
