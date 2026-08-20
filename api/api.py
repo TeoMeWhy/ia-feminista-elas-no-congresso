@@ -17,7 +17,7 @@ import os
 
 MLFLOW_URI = os.getenv("MLFLOW_URI", "http://localhost:5000")
 MODEL_DESFAVORAVEL_NAME = os.getenv("MODEL_DESFAVORAVEL_NAME", "quiteria_desfavoravel")
-MODEL_DESFAVORAVEL_VERSION = os.getenv("MODEL_DESFAVORAVEL_VERSION", None)
+MODEL_DESFAVORAVEL_VERSION = os.getenv("MODEL_DESFAVORAVEL_VERSION", "1" )
 
 mlflow.set_tracking_uri(MLFLOW_URI)
 
