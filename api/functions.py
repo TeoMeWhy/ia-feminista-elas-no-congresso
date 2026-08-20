@@ -1,38 +1,13 @@
 import pandas as pd
+import sys 
+
+sys.path.insert(0, "../")
+
+from pre_processamento.pre_process import format_markdown
 
 def to_proba(item):
     d = {x["label"]: x["score"] for x in item}
     return d.get("LABEL_1", d.get("1", 0.0))
-
-
-def format_markdown(text_md):
-
-    lines = []
-    for l in text_md.split("\n"):
-
-        if "<!--" in l:
-            continue
-        
-        text = (l.replace("  ", " ")
-              .replace("\t", " ")
-              .replace("..", "")
-              .replace("\\_", "")
-              .replace("_", "")
-              .replace("##", "")
-              .strip(" "))
-        
-        while "  " in text:
-            text = text.replace("  ", " ")
-        
-        if len(text) == 0:
-            continue
-        
-        if text in lines:
-            continue
-        
-        lines.append(text)
-    text = "\n\n".join(lines)
-    return text
 
 
 def format_text(row):

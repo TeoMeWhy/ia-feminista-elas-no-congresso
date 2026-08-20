@@ -21,6 +21,8 @@ MODEL_DESFAVORAVEL_VERSION = os.getenv("MODEL_DESFAVORAVEL_VERSION", "1" )
 
 mlflow.set_tracking_uri(MLFLOW_URI)
 
+print("Subindo API...")
+
 pipe = mlflow.transformers.load_model(
     f"models:/{MODEL_DESFAVORAVEL_NAME}/{MODEL_DESFAVORAVEL_VERSION}",
     return_type="pipeline",
