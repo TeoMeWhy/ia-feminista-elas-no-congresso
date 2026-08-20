@@ -46,7 +46,7 @@ df_train['tema'] = df_train['tema'].apply(lambda x: x.replace(",", "").replace("
 df_val['tema'] = df_val['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
 df_test['tema'] = df_test['tema'].apply(lambda x: x.replace(",", "").replace(" ", "_").replace("+", ""))
 
-themes_list = sorted(df_train['tema'].dropna().unique().tolist())
+themes_list = sorted(df_train['tema'].unique().tolist())
 theme2id = {theme: idx for idx, theme in enumerate(themes_list)}
 id2theme = {idx: theme for idx, theme in enumerate(themes_list)}
 num_labels = len(themes_list)
